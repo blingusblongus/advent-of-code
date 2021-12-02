@@ -2,16 +2,19 @@
 //from the previous measurement.
 
 let inputStr = require('./input.js');
-let input = inputStr.split('\n');
+let input = inputStr.split('\n').map(str => Number(str));
 
 function isDeeper(depthArr){
     let deeper = 0;
-    for(let i = 1; i<input.length; i++){
-        if(Number(depthArr[i]) > Number(depthArr[i-1])){
+    let lastChunk = 
+    for(let i = 3; i<input.length; i++){
+        
+
+        if(Number(input[i]) > Number(input[i-1])){
             deeper++;
         }
     }
     return deeper;
 }
 
-console.log(isDeeper(input));
+console.log(isDeeper(inputStr));
