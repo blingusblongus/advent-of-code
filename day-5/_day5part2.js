@@ -36,6 +36,8 @@ function findVents(input){
         let y1 = line[0][1];
         let y2 = line[1][1];
 
+        console.log(line);
+
         if(x1 === x2){
             for(let y=Math.min(y1,y2); y<=Math.max(y1,y2); y++){
                 map[y][x1] += 1;
@@ -45,31 +47,35 @@ function findVents(input){
                 map[y1][x] += 1;
             }
         }else if(Math.abs(y2 - y1) === Math.abs(x2 - x1)){
-            if(x2 < x1) line = [line[1], line[0]];
+            // Write diagonal lines
             console.log('line', line);
-            let slope = line[1][1] > [0][1] ? 1 : -1;
-            console.log('slope', slope)
 
-            let yy = line[0][1];
-            let xx = line[0][0];
-            console.log('yy', yy);
-            console.log('xx', xx);
-            console.log(map[yy]);
-            for(let x = xx; x<line[1][0]; x++){
-                map[yy][x] += 1;
-                yy += slope;
-                console.log('mark')
+            let backwards = x1 > x2;
+
+            if(!backwards){
+                let slope = y2 > y1 ? 1 : -1;
+                let y = Number(y1);
+
+                for(let x = Math.min(x1,x2); x<=Math.max(x1,x2); x++){
+                    map[y][x] += 1;
+                    y += slope;
+                }
+            }else{
+                let slope = y2 > y1 ? 1 : -1;
+                let y = Number(y1);
+
+                for(let x = Math.max(x1,x2); x>=Math.min(x1,x2); x--){
+                    map[y][x] += 1;
+                    y += slope;
+                }
             }
         }else{
             console.log('err');
         }
     }
 
-    console.log(map);
-
-
     return map.flat().filter(el => el > 1).length;
 }
 
-console.log(findVents(testInput)); // 5
-// console.log(findVents(input));
+console.log(findVents(testInput)); // 12
+console.log(findVents(input));
