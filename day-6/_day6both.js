@@ -1,14 +1,12 @@
-// I bet there's a better way to do this...
-// You could probably model just the first 7 days, then add ?^x where x is the number of weeks???
-
 const testInput = require('./day6testInput.js');
 const input = require('./day6Input.js');
 
-function modelFish(input){
+function modelFish(input, duration){
     const startFish = input.split(',').map(el => parseInt(el));
     
     let fish = {};
     let nextFish = {};
+    const days = duration;
 
     // init empty fish table
     zeroTable(fish);
@@ -21,7 +19,7 @@ function modelFish(input){
     console.log('startFish', fish);
 
     //step through a day
-    for(let i=0; i<80; i++){
+    for(let i=0; i<days; i++){
         //reset nextfish
         nextFish = zeroTable(nextFish);
 
@@ -66,5 +64,10 @@ function sumObjValues(obj){
 }
 
 // Tests
-console.log(modelFish(testInput)); // 5934
-console.log(modelFish(input));
+// Part 1
+console.log(modelFish(testInput, 80)); // 5934
+console.log(modelFish(input, 80));
+
+//Part 2
+console.log(modelFish(testInput, 256)); // 26984457539
+console.log(modelFish(input, 256));
