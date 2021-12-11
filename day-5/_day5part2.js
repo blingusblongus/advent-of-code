@@ -30,13 +30,14 @@ function findVents(input){
         }
     }
 
+    console.log('maxX',maxX);
+    console.log('maxY', maxY)
+    
     for(let line of vents){
-        let x1 = line[0][0];
-        let x2 = line[1][0];
-        let y1 = line[0][1];
-        let y2 = line[1][1];
-
-        console.log(line);
+        let x1 = Number(line[0][0]);
+        let x2 = Number(line[1][0]);
+        let y1 = Number(line[0][1]);
+        let y2 = Number(line[1][1]);
 
         if(x1 === x2){
             for(let y=Math.min(y1,y2); y<=Math.max(y1,y2); y++){
@@ -50,9 +51,11 @@ function findVents(input){
             // Write diagonal lines
             console.log('line', line);
 
-            let backwards = x1 > x2;
+            let backwards = Number(x1) > Number(x2);
+            console.log(backwards);
 
             if(!backwards){
+                console.log('y2, y1', y2,' ', y1);
                 let slope = y2 > y1 ? 1 : -1;
                 let y = Number(y1);
 
