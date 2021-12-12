@@ -1,4 +1,5 @@
 const testInput = require('./day11TestInput.js');
+const miniTest = require('./day11Minitest.js');
 
 function octopuses(input, steps) {
     const grid = [];
@@ -19,12 +20,16 @@ function octopuses(input, steps) {
         //increment all octopuses
         for (let j = 0; j < grid.length; j++) {
             for (let k = 0; k < grid[j].length; k++) {
-                grid[j][k].energy++;
-                checkFlash(j, k, grid);
+                grid[j][k].energy++;          
             }
         }
 
-        console.log(grid[0][0]);
+        //recursively check flashes
+        for (let j = 0; j < grid.length; j++) {
+            for (let k = 0; k < grid[j].length; k++) {
+                checkFlash(j, k, grid);        
+            }
+        }
 
         //reset flashed octopuses
         for (let j = 0; j < grid.length; j++) {
@@ -37,6 +42,16 @@ function octopuses(input, steps) {
                 }
             }
         }
+
+        //visualize
+        let visGrid = new Array(grid.length);
+        for(let i=0; i<grid.length; i++){
+            let energies = grid[i].map(oct => oct.energy).join('');
+            visGrid[i] = energies;
+        }
+
+        console.log(visGrid);
+        console.log(flashes);
     }
 
     return flashes;
@@ -63,5 +78,6 @@ function checkFlash(j, k, grid, flashes) {
         }
     }
 }
-console.log(octopuses(testInput, 10)); //204;
+console.log(octopuses(miniTest, 3)); //204;
+// console.log(octopuses(testInput, 10)); //204;
 // console.log(octopuses(testInput, 100)); // 1656
