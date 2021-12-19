@@ -2,8 +2,7 @@ const testInput = require('./testInput.js');
 const input = require('./input.js');
 
 function findLowPoints(input){
-    let riskLevel = 0;
-    let basin = [];
+    let riskLevel = [];
     //make 2d array by splitting by line break and ''
     let arr = input.split(/\n/g).map(row => row.split(''));
 
@@ -32,32 +31,8 @@ function findLowPoints(input){
     // console.log(riskLevel);
 
     // return sum of (all low points + 1);
-    return riskLevel;
-}
-
-
-// THE PLAN
-// write a recursive function that will accumulate each time it finds a larger neighbor
-// provided that neighbor has not already been added to the basin 
-/*
-something like
-
-let sum = 0;
-if(center < top && !checkInBasin(top)) sum += checkSurrounding(top);
-""
-""
-""
-else
-return sum;
-*/
-
-function checkSurrounding(){
-
-}
-
-function checkInBasin(){
-    return false;
+    return riskLevel.reduce((sum, el)=> sum += Number(el) + 1, 0);
 }
 
 console.log(findLowPoints(testInput)) // 15;
-// console.log(findLowPoints(input));
+console.log(findLowPoints(input));
