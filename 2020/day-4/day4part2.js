@@ -22,12 +22,13 @@ function checkValidPassports(input) {
 
         //Test the pObjs
         for (let field of reqFields) {
-            // does it have all req'd fields?
+            //does it have all req'd fields?
             if (!pObj[field]) {
                 valid = false;
                 break;
             }
 
+            //Validate the value according to the field
             let value = pObj[field];
             switch (field) {
                 case 'byr':
@@ -72,7 +73,7 @@ function checkValidPassports(input) {
                     }
                     break;
                 case 'pid':
-                    let pidRegex = /\d{9}/;
+                    let pidRegex = /^\d{9}$/;
                     if(!pidRegex.test(value)){
                         valid = false;
                     }                 
@@ -97,7 +98,3 @@ function checkRange(str, min, max) {
 
 console.log(checkValidPassports(test)); // 2
 console.log(checkValidPassports(full));
-
-// console.log('192cm'.match(/\d+|(cm|in)/g));
-// console.log('1956'.length === 4 && 1920 <= parseInt(1956) <= 2002);
-// console.log(/^#[a-f0-9]{6}$/i.test('#aaff33'))
