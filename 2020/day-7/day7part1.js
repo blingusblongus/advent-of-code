@@ -9,7 +9,45 @@ function howManyColors(input){
             //split digits off from bags that have them
             .map(item => item.match(/^\d+|\w+ \w+$/g)));
 
-    console.log(rules);
+    //build ruleObj so rules can be accessed by key
+    const ruleObj = {};
+    for(let rule of rules){
+        let [[bag]] = rule.splice(0,1);
+        ruleObj[bag] = rule;
+    }
+
+    // console.log(ruleObj);
+
+    // iterate through all bags, count if shiny is possible
+    let numBags = 0;
+    let bagsChecked = 0;
+    for(let bag in ruleObj){
+        bagsChecked++;
+        if(bag === 'shiny gold' || hasShinyBag(bag)){
+            numBags++;
+        }
+    }
+
+    console.log(Object.keys(ruleObj).length)
+    console.log(bagsChecked);
+    return numBags;
+
+    // recursive function to drill through bags until shiny gold found
+    // or bag with no inner bags found
+    // this is assuming the rules can't loop :/
+    function hasShinyBag(bag){
+        let innerBags = ruleObj[bag];
+
+        //check if shiny bag
+        for(let innerBag of innerBags){
+            if(innerBag[1] === 'shiny gold'){
+                return true;
+            }else{
+                return hasShinyBag(innerBag[1]);
+            }
+        }
+    }
 }
 
-console.log(howManyColors(test));
+// console.log(howManyColors(test));
+console.log(howManyColors(full));
