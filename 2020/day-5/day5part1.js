@@ -1,35 +1,13 @@
 const input = require('./input.js');
 
-function findYourSeat(input){
-    const seats = mapSeatIDs(input);
-    const possibleSeats = [];
-
-    // find possible seats (seat ids two apart);
-    for(let i=0; i<seats.length; i++){
-        for(let j=i+1; j<seats.length; j++){
-            let difference = seats[i] - seats[j];
-            if(Math.abs(difference) === 2){
-                possibleSeats.push(Math.min(seats[i], seats[j]) + 1);
-            }
-        }
-    }
-
-    // find the possibleSeat that's not in the seats list
-    for(let seat of possibleSeats){
-        if(!seats.includes(seat)){
-            return seat;
-        }
-    }
-
-    console.log('couldn\'t find your seat');
-}
-
-function mapSeatIDs(input){
-    return seats = input
+function getHighestID(input){
+    const seats = input
         //split input into individual seats
         .split(/\n\s*/g)
         //map seat IDs to the seats arr
         .map(seat => getSeatID(seat));
+
+    return Math.max(...seats);
 }
 
 function getSeatID(seat){
@@ -52,4 +30,5 @@ function mapBinary(input, zero){
         .join('');
 }
 
-console.log(findYourSeat(input));
+// console.log(getSeatID('FBFBBFFRLR')) // 357
+console.log(getHighestID(input));
