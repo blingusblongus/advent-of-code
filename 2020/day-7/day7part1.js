@@ -23,7 +23,8 @@ function howManyColors(input){
     let bagsChecked = 0;
     for(let bag in ruleObj){
         bagsChecked++;
-        if(bag === 'shiny gold' || hasShinyBag(bag)){
+        if(hasShinyBag(bag)){
+            console.log('bag found!');
             numBags++;
         }
     }
@@ -49,5 +50,5 @@ function howManyColors(input){
     }
 }
 
-// console.log(howManyColors(test));
+console.log(howManyColors(test));
 console.log(howManyColors(full));
