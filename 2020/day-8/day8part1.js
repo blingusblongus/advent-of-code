@@ -34,5 +34,5 @@ function getLoopAcc(input){
     // console.log(instructions);
 }
 
-// console.log(getLoopAcc(test)); // 5
-console.log(getLoopAcc(full));
+console.log(getLoopAcc(test)); // 5
+// console.log(getLoopAcc(full));
