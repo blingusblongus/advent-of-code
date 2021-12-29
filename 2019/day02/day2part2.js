@@ -30,28 +30,15 @@ function runProgram(program){
 }
 
 function adjustProgram(program){
-    const prog = splitProg(program);
-    for(let i = 0; i<100; i++){
-        for(let j=0; j<100; j++){
-            let checkProg = [...prog];
-            checkProg[1] = i;
-            checkProg[2] = j;
+    program[1] = 12;
+    program[2] = 2;
 
-            let result = runProgram(checkProg);
-            // console.log(result[0]);
-
-            if(result[0] === 19690720){
-                return 100 * i + j;
-            }
-        }
-    }
-
-    console.log('error, no result found');
+    return runProgram(program);
 }
 
 // console.log(test);
 // console.log(runProgram(test));
 
-console.log(adjustProgram(full));
+console.log(adjustProgram(splitProg(full)));
 
 // console.log(runProgram(splitProg('1,0,0,0,99')))
