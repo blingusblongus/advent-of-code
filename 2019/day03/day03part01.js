@@ -4,38 +4,47 @@ function getClosestIntersection(input) {
     const wires = input.split(/\n\s*/)
         .map(wire => wire.split(/,/g));
 
-    console.log(wires);
+    let wireMap0 = getWireMap(wires[0]);
+    let wireMap1 = getWireMap(wires[1]);
 
-    let wireMap = { '0-0': 1 };
     let crosses = [];
 
-    for (let wire of wires) {
-        let pos = [0, 0];
-        for (let instruction of wire) {
-            let direction = instruction.substring(0, 1);
-            let distance = Number(instruction.substring(1));
+    // push the coords to crosses arr if same loc is in both objs
+    for(let loc in wireMap0){
+        if(wireMap1[loc]){
+            crosses.push(loc.split('x'));
+        }
+    }
 
-            console.log(instruction);
+    return Math.min(...crosses
+        .map(cross => Math.abs(cross[0]) + Math.abs(cross[1])))
+}
 
-            for (let i = 0; i < distance; i++) {
-                move(pos, direction);
+// trace the path of a single wire and save all the locations
+function getWireMap(wire){
+    let wireMap = {};
+    let pos = [0, 0];
 
-                let key = pos[0] + '-' + pos[1];
-                if (!wireMap[key]) {
-                    wireMap[key] = 1;
-                } else {
-                    wireMap[key] += 1;
-                    crosses.push(key.split('-'));
-                    console.log(crosses);
-                }
+    for (let instruction of wire) {
+        let direction = instruction.substring(0, 1);
+        let distance = Number(instruction.substring(1));
+
+        for (let i = 0; i < distance; i++) {
+            move(pos, direction);
+
+            let key = pos[0] + 'x' + pos[1];
+
+            // create a reference with all covered locations
+            if (!wireMap[key]) {
+                wireMap[key] = true;
             }
         }
     }
 
-
-    return Math.min(...crosses.map(cross => Math.abs(cross[0]) + Math.abs(cross[1])))
+    return wireMap;
 }
 
+// util to adjust pos in the appropriate given
 function move(pos, direction) {
     switch (direction) {
         case 'R':
@@ -55,4 +64,7 @@ function move(pos, direction) {
     }
 }
 
-console.log(getClosestIntersection(demo)); // 6
+// console.log(getClosestIntersection(demo)); // 6
+// console.log(getClosestIntersection(test1)); // 159
+// console.log(getClosestIntersection(test2)); // 135
+console.log(getClosestIntersection(full));
