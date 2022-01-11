@@ -1,76 +1,58 @@
-const {test1, test2, full} = require('./input.js');
+const { demo, test1, test2, full } = require('./input.js');
 
-function getClosestIntersection(input){
-    const instructions = input.split(/\n\s*|,/g);
-    const {bounds, origin} = getBounds(instructions);
-    const grid = buildGrid(...bounds);
+function getClosestIntersection(input) {
+    const wires = input.split(/\n\s*/)
+        .map(wire => wire.split(/,/g));
 
-    let x = origin[0];
-    let y = origin[1];
+    console.log(wires);
 
-    for(let instruction of instructions){
-        let direction = instruction.substring(0,1);
-        let distance = Number(instruction.substring(1));
-        
-    }
-    
-    // return instructions;
-}
+    let wireMap = { '0-0': 1 };
+    let crosses = [];
 
-function getBounds(instructions){
-    let yMax = 0;
-    let yMin = 0;
-    let xMax = 0;
-    let xMin = 0;
-    let y = 0;
-    let x = 0;
+    for (let wire of wires) {
+        let pos = [0, 0];
+        for (let instruction of wire) {
+            let direction = instruction.substring(0, 1);
+            let distance = Number(instruction.substring(1));
 
-    for(let instruction of instructions){
-        let direction = instruction.substring(0,1);
-        let distance = Number(instruction.substring(1));
-        
-        switch(direction){
-            case 'R':
-                x += distance;
-                if(x > xMax) xMax = x;
-                break;
-            case 'L':
-                x -= distance;
-                if(x < xMin) xMin = x;
-                break;
-            case 'D':
-                y += distance;
-                if(y > yMax) yMax = y;
-                break;
-            case 'U':
-                y -= distance;
-                if(y < yMin) yMin = y;
-                break;
-            default:
-                console.log('error in bounds');
+            console.log(instruction);
 
+            for (let i = 0; i < distance; i++) {
+                move(pos, direction);
+
+                let key = pos[0] + '-' + pos[1];
+                if (!wireMap[key]) {
+                    wireMap[key] = 1;
+                } else {
+                    wireMap[key] += 1;
+                    crosses.push(key.split('-'));
+                    console.log(crosses);
+                }
+            }
         }
     }
 
-    let yOff = Math.abs(yMin);
-    let xOff = Math.abs(xMin);
 
-    return {
-        bounds: [xMax + xOff, yMax + yOff],
-        origin: [xOff, yOff]
+    return Math.min(...crosses.map(cross => Math.abs(cross[0]) + Math.abs(cross[1])))
+}
+
+function move(pos, direction) {
+    switch (direction) {
+        case 'R':
+            pos[0] += 1;
+            return pos;
+        case 'L':
+            pos[0] -= 1;
+            return pos;
+        case 'D':
+            pos[1] -= 1;
+            return pos;
+        case 'U':
+            pos[1] += 1;
+            return pos;
+        default:
+            console.log('Bad direction');
     }
 }
 
-function buildGrid(x, y){
-    let grid = [];
-
-    for(let i = 0; i<=y; i++){
-        let row = [];
-        for(let j = 0; j<=x; j++){
-            row.push(0);
-        }
-        grid.push(row);
-    }
-    return grid;
-}
-console.log(getClosestIntersection(test1));
+console.log(getClosestIntersection(demo)); // 6
