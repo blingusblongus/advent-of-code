@@ -10,6 +10,19 @@ module.exports = {
     E)J
     J)K
     K)L`,
+    test2: `COM)B
+    B)C
+    C)D
+    D)E
+    E)F
+    B)G
+    G)H
+    D)I
+    E)J
+    J)K
+    K)L
+    K)YOU
+    I)SAN`,
     full: `3TK)7K5
     M33)KHG
     SRG)PM6
