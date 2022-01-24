@@ -2,7 +2,7 @@ import re
 fhand = open('2018/day03/input.txt', 'r')
 ftest = open('2018/day03/test.txt', 'r')
 
-def getOverlapping(input):
+def getNonOverlapping(input):
     hashMap = {}
     candidates = {}
 
@@ -45,5 +45,5 @@ def parseClaim(claim):
         }
 
 # print(parseClaim('#1 @ 335,861: 14x10'))
-# print(getOverlapping(ftest))
-print(getOverlapping(fhand))
+# print(getNonOverlapping(ftest))
+print(getNonOverlapping(fhand))
