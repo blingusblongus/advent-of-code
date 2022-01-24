@@ -27,12 +27,8 @@ def getOverlapping(input):
         if hashMap[coord][0] > 1:
             for num in hashMap[coord][1:]:
                 candidates[num] = False
-
-    # find the first (only) candidate still eligible
-    for candidate in candidates:
-        if candidate: return candidate
             
-    return 'not found'
+    return filter(lambda c: candidates[c] == True, candidates)
 
 def parseClaim(claim):
     # use regex to extract starting coords, width, and height
