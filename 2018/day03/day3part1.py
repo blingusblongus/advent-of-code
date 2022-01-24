@@ -12,7 +12,6 @@ def getOverlapping(input):
         # record a count for every square inch in claim coords
         for row in range(claimData['y'], claimData['y'] + claimData['height']):
             for column in range(claimData['x'], claimData['x'] + claimData['width']):
-                # print(line, 'writing:', column, row);
                 loc = str(row) + ',' + str(column)
                 hashMap[loc] = hashMap.get(loc, 0) + 1
 
@@ -36,4 +35,5 @@ def parseClaim(claim):
         }
 
 # print(parseClaim('#1 @ 335,861: 14x10'))
-print(getOverlapping(ftest))
+# print(getOverlapping(ftest))
+print(getOverlapping(fhand))
