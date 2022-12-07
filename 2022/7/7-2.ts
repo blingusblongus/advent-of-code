@@ -1,18 +1,78 @@
-import {test, test2, input} from './input.js';
+import { test, input } from './input.js';
 
-const getMarkerIndex = (input: string): number => {
-    for(let i=13; i<input.length; i++){
-        const marker = new Set<string>();
-  
-        for(let j=0; j<14; j++){
-            marker.add(input[i-j]);
+const parseInput = (input: string): string[][] => {
+    let arr = input.split(/\n/g);
+    return arr.map(x => x.split(/\s/g));
+}
+
+const getFileSystem = (lines: string[][], files = {}) => {
+    let fileMap = {};
+    let currDir = fileMap;
+
+    const path: string[] = [];
+
+    try {
+        for (let line of lines) {
+            if (line[0] === '$') { //commands
+                if (line[1] === 'cd') {
+                    if (line[2] === '/') {
+                        currDir = fileMap;
+                        path.push('/');
+                    } else if (line[2] === '..') { // follow path to up one level
+                        path.pop();
+                        console.log('path ', path);
+                        path.forEach(loc => loc === '/' ?
+                            currDir = fileMap :
+                            currDir = currDir[loc]
+                        )
+                    } else {
+                        currDir = currDir[line[2]];
+                        path.push(line[2]);
+                    }
+                }
+            } else if (line[0] === 'dir') { // directories
+                currDir[line[1]] = {};
+            } else {
+                currDir[line[1]] = Number(line[0]);
+            }
         }
-        
-        if(marker.size === 14) return i + 1;
+    } catch (err) {
+        console.log(err);
+    }
+
+    return fileMap;
+}
+
+type Dir = [string, number];
+
+const getDirSizes = (dir: Object, dirs: Dir[] = [], loc = '/'): [number, Dir[]] => {
+    let sum = 0;
+    for (let item in dir) {
+        if (typeof dir[item] === 'object') {
+            sum += getDirSizes(dir[item], dirs, item)[0];
+        } else {
+            sum += dir[item];
+        }
+    }
+    dirs.push([loc, sum]);
+    return [sum, dirs];
+}
+
+const solvePuzzle = (input: string) => {
+    const totalSpace = 70000000;
+    const files = getFileSystem(parseInput(input));
+    console.log(files);
+
+    const sizeMap = getDirSizes(files);
+    const freeSpace = totalSpace - sizeMap[0];
+    const spaceNeeded = 30000000 - freeSpace;
+    
+    sizeMap[1].sort((a,b)=> a[1]-b[1]);
+
+    for(let dir of sizeMap[1]){
+        if(dir[1] > spaceNeeded) return dir[1];
     }
     return -1;
 }
 
-console.log(getMarkerIndex(test));
-console.log(getMarkerIndex(test2));
-console.log(getMarkerIndex(input));
+console.log(solvePuzzle(input));

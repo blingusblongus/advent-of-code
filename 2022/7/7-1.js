@@ -62,16 +62,8 @@ const solvePuzzle = (input) => {
     const files = getFileSystem(parseInput(input));
     console.log(files);
     const sizeMap = getDirSizes(files);
-    console.log(sizeMap);
-    console.log(sizeMap[1].filter(x => x[1] <= 100000).reduce((sum, el) => sum += el[1], 0));
-    // console.log('sizeMap', sizeMap);
-    // console.log('filtered sizeMap', Array.from(sizeMap.values())
-    //     .filter(x => x <= 100000)
-    //     // .reduce((sum, el) => sum += el, 0)
-    //     );
-    // const sumDeletable = Array.from(sizeMap)
-    //     .filter(x => x[1] <= 100000)
-    //     .reduce((sum, el) => sum += el[1], 0);
-    // return sumDeletable;
+    return sizeMap[1]
+        .filter(x => x[1] <= 100000)
+        .reduce((sum, el) => sum += el[1], 0);
 };
 console.log(solvePuzzle(input));

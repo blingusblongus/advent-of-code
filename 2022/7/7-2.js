@@ -1,77 +1,71 @@
-import { test, input } from './input.js';
-
-const parseInput = (input: string): string[][] => {
+import { input } from './input.js';
+const parseInput = (input) => {
     let arr = input.split(/\n/g);
     return arr.map(x => x.split(/\s/g));
-}
-
-const getFileSystem = (lines: string[][], files = {}) => {
+};
+const getFileSystem = (lines, files = {}) => {
     let fileMap = {};
     let currDir = fileMap;
-
-    const path: string[] = [];
-
+    const path = [];
     try {
         for (let line of lines) {
-            // console.log(line);
-
             if (line[0] === '$') { //commands
                 if (line[1] === 'cd') {
                     if (line[2] === '/') {
                         currDir = fileMap;
                         path.push('/');
-                    } else if (line[2] === '..') { // follow path to up one level
+                    }
+                    else if (line[2] === '..') { // follow path to up one level
                         path.pop();
                         console.log('path ', path);
                         path.forEach(loc => loc === '/' ?
                             currDir = fileMap :
-                            currDir = currDir[loc]
-                        )
-                    } else {
+                            currDir = currDir[loc]);
+                    }
+                    else {
                         currDir = currDir[line[2]];
                         path.push(line[2]);
                     }
-                    // console.log('path = ', path);
-                    // console.log(fileMap);
                 }
-            } else if (line[0] === 'dir') { // directories
+            }
+            else if (line[0] === 'dir') { // directories
                 currDir[line[1]] = {};
-            } else {
+            }
+            else {
                 currDir[line[1]] = Number(line[0]);
             }
         }
-    } catch (err) {
+    }
+    catch (err) {
         console.log(err);
     }
-
     return fileMap;
-}
-
-type Dir = [string, number];
-
-const getDirSizes = (dir: Object, dirs: Dir[] = [], loc = '/'): [number, Dir[]] => {
+};
+const getDirSizes = (dir, dirs = [], loc = '/') => {
     let sum = 0;
     for (let item in dir) {
         if (typeof dir[item] === 'object') {
             sum += getDirSizes(dir[item], dirs, item)[0];
-        } else {
+        }
+        else {
             sum += dir[item];
         }
     }
-    console.log(`sum at ${loc}:`, sum);
     dirs.push([loc, sum]);
     return [sum, dirs];
-}
-
-const solvePuzzle = (input: string): number => {
+};
+const solvePuzzle = (input) => {
+    const totalSpace = 70000000;
     const files = getFileSystem(parseInput(input));
     console.log(files);
-
-        const sizeMap = getDirSizes(files);
-
-        return sizeMap[1]
-            .filter(x => x[1] <= 100000)
-            .reduce((sum, el) => sum += el[1],0);
-}
-
+    const sizeMap = getDirSizes(files);
+    const freeSpace = totalSpace - sizeMap[0];
+    const spaceNeeded = 30000000 - freeSpace;
+    sizeMap[1].sort((a, b) => a[1] - b[1]);
+    for (let dir of sizeMap[1]) {
+        if (dir[1] > spaceNeeded)
+            return dir[1];
+    }
+    return -1;
+};
 console.log(solvePuzzle(input));
