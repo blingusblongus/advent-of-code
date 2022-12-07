@@ -47,7 +47,9 @@ const getFileSystem = (lines: string[][], files = {}) => {
     return fileMap;
 }
 
-const getDirSizes = (dir: Object, dirs = new Map<string, number>(), loc = '/'): [number, Map<string, number>] => {
+type Dir = [string, number];
+
+const getDirSizes = (dir: Object, dirs: Dir[] = [], loc = '/'): [number, Dir[]] => {
     let sum = 0;
     for (let item in dir) {
         if (typeof dir[item] === 'object') {
@@ -57,7 +59,7 @@ const getDirSizes = (dir: Object, dirs = new Map<string, number>(), loc = '/'): 
         }
     }
     console.log(`sum at ${loc}:`, sum);
-    dirs.set(loc, sum);
+    dirs.push([loc, sum]);
     return [sum, dirs];
 }
 
@@ -65,30 +67,11 @@ const solvePuzzle = (input) => {
     const files = getFileSystem(parseInput(input));
     console.log(files);
 
+        const sizeMap = getDirSizes(files);
 
-    const recurseOverAll = (dir) => {
-        for(let folder in dir){
-
-        }
-    }
-
-
-
-
-
-
-    // const sizeMap = getDirSizes(files)[1];
-    // console.log('sizeMap', sizeMap);
-    // console.log('filtered sizeMap', Array.from(sizeMap.values())
-    //     .filter(x => x <= 100000)
-    //     // .reduce((sum, el) => sum += el, 0)
-    //     );
-
-    // const sumDeletable = Array.from(sizeMap)
-    //     .filter(x => x[1] <= 100000)
-    //     .reduce((sum, el) => sum += el[1], 0);
-
-    // return sumDeletable;
+        return sizeMap[1]
+            .filter(x => x[1] <= 100000)
+            .reduce((sum, el) => sum += el[1],0);
 }
 
 console.log(solvePuzzle(input));
