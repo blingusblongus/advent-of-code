@@ -1,71 +1,58 @@
 import { test, input } from './input.js';
 
-type Pos = [number, number];
+type Direction = [string, number];
+type Coordinate = [number, number];
+type TailPositions = Set<string>;
 
-const parseInput = (input: string): string[][] => {
-    let arr = input.split(/\n/g);
-    return arr.map(x => x.split(""));
+const parseInput = (input: string): Direction[] => {
+    const result = input
+        .split(/\n/g)
+        .map((line): Direction => [line.split(' ')[0], Number(line.split(' ')[1])])
+    return result;
 }
 
-const getTreeScore = (row: string[], coords: Pos): number => {
-    let index = coords[0];
-    let visible = true;
-    let height = Number(row[index]);
-
-    let left = 0;
-    let right = 0;
-
-    // guard edge
-    if(index === 0 || index === row.length -1) return 0;
-
-    //look left
-    for(let i=index - 1; i>=0; i--){
-        // console.log('checking left', row[i], 'vs', height);
-        let otherHeight: number = Number(row[i]);
-        if(otherHeight >= height){
-            visible = false;
-            left++
-            // console.log('blocked from left');
-            break;
-        }
-        left++
-    }
-
-    //look right
-    visible = true;
-    for(let i=index + 1; i<row.length; i++){
-        let otherHeight: number = Number(row[i]);
-        // console.log('checking right', row[i], 'vs', height);
-        if(otherHeight >= height){
-            visible = false;
-            right++
-            // console.log('blocked from right')
-            break;
-        }
-        right++
-    }
-
-    return left * right;
+const notAdjacent = (head: Coordinate, tail: Coordinate) => {
+    return Math.abs(tail[0] - head[0]) >= 2 || Math.abs(tail[1] - head[1]) >= 2;
 }
 
-const solvePuzzle = (grove: string[][]) => {
-    let scenicScore = 0;
+export const solvePuzzle = (input: string) => {
+    const result: TailPositions = new Set();
+    const directions = parseInput(input);
 
-    for(let y=0; y<grove.length; y++){
-        let row = grove[y];
+    // Starting Coords
+    let position: Coordinate = [0,0];
+    let tailPosition: Coordinate = [0,0];
 
-        for(let x=0; x<row.length; x++){
-            const pos: Pos = [x,y];
-            const transposedRow = grove.map(el => el[x]);
-            let posTreeScore = getTreeScore(transposedRow, [y,x]) * getTreeScore(row, pos);
-            if(posTreeScore > scenicScore) scenicScore = posTreeScore;
+    // For each direction, move the head n times in the given direction
+    for(let dir of directions){
+        const [direction, distance] = dir;
+        let horiz = false;
+        let increment = 1;
+        let last: Coordinate = [...position];
+
+        if(['R','L'].includes(direction)) horiz = true;
+        if(['D', 'L'].includes(direction)) increment = -1;
+
+        // One by one, move the head and check if tails should move
+        for(let i=0; i<distance; i++){
+            //Move head
+            if(horiz){
+                position[0] = position[0] + increment;
+            }else{
+                position[1] = position[1] + increment;
+            }
+
+            //If tail moves, add to set
+            if(notAdjacent(position, tailPosition)){
+                tailPosition = last;
+                result.add(JSON.stringify(tailPosition));
+            }
+
+            // keep track of where tail might be pulled next;
+            last = [...position];
         }
     }
-
-    return scenicScore;
+    return result.size;
 }
-const parsedInput = parseInput(input);
-console.log(solvePuzzle(parsedInput));
 
-// console.log(checkHoriz(parsedInput[0], [1,0]))
-
+console.log(solvePuzzle(input));
