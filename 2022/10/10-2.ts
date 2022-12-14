@@ -21,6 +21,16 @@ const getSignalStrengths = (timeline: Map<number, number>) => {
     return sum;
 }
 
+const getScreenArr = (timeline: Map<number, number>) => {
+    const result = [];
+    const arr = Array.from(timeline);
+    while(arr.length > 0){
+        result.push(arr.splice(0, 40));
+    }
+    console.log(result);
+    return result;
+}
+
 const solvePuzzle = (input: string) => {
     const timeline = new Map<number, number>();
     const instructions = parseInput(input);
@@ -45,6 +55,16 @@ const solvePuzzle = (input: string) => {
         }
     }
     console.log(timeline);
-    return getSignalStrengths(timeline);
+    const screen: [number, number][] = getScreenArr(timeline);
+
+    const crt: string[][] = [];
+
+    for(let line of screen){
+        const pixels: number[] = line.map((pixel) => pixel[1]);
+        const translated: string[] = pixels.map((pixel, i): string => Math.abs(pixel - i) < 2 ? 'X' : '.')
+        crt.push(translated);
+    }
+  
+    return crt.map(line => line.join(''));
 }
-console.log(solvePuzzle(input));
+console.log(solvePuzzle(test2));
